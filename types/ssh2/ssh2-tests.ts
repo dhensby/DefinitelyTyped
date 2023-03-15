@@ -132,9 +132,9 @@ var Client = require('ssh2').Client;
 var conn = new Client();
 conn.on('ready', () => {
     console.log('Client :: ready');
-    conn.sftp( (err: Error, sftp: ssh2.SFTPWrapper) => {
+    conn.sftp((err: Error | undefined, sftp?: ssh2.SFTPWrapper) => {
         if (err) throw err;
-        sftp.readdir('foo', (err: Error | undefined, list: ssh2.FileEntry[]) => {
+        sftp.readdir('foo', (err: Error | undefined, list?: ssh2.FileEntry[]) => {
             if (err) throw err;
             console.dir(list);
             conn.end();
@@ -156,7 +156,7 @@ var conn1 = new Client(),
 
 conn1.on('ready', () => {
     console.log('FIRST :: connection ready');
-    conn1.exec('nc 192.168.1.2 22', (err: Error, stream: ssh2.ClientChannel) => {
+    conn1.exec('nc 192.168.1.2 22', (err: Error | undefined, stream?: ssh2.ClientChannel) => {
         if (err) {
             console.log('FIRST :: exec error: ' + err);
             return conn1.end();
@@ -175,7 +175,7 @@ conn1.on('ready', () => {
 
 conn2.on('ready', () => {
     console.log('SECOND :: connection ready');
-    conn2.exec('uptime', (err: Error, stream: ssh2.ClientChannel) => {
+    conn2.exec('uptime', (err: Error | undefined, stream?: ssh2.ClientChannel) => {
         if (err) {
             console.log('SECOND :: exec error: ' + err);
             return conn1.end();
@@ -232,7 +232,7 @@ conn.on('x11', (info: any, accept: any, reject: any) => {
 });
 
 conn.on('ready', () => {
-    conn.exec('xeyes', { x11: true }, (err: Error, stream: ssh2.ClientChannel) => {
+    conn.exec('xeyes', { x11: true }, (err: Error | undefined, stream?: ssh2.ClientChannel) => {
         if (err) throw err;
         var code = 0;
         stream.on('end', () => {
@@ -261,7 +261,7 @@ var ssh_config = {
     password: 'rules'
 };
 
-socks.createServer( (info: any, accept: any, deny: any) => {
+socks.createServer((info: any, accept: any, deny: any) => {
     // NOTE: you could just use one ssh2 client connection for all forwards, but
     // you could run into server-imposed limits if you have too many forwards open
     // at any given time
@@ -271,7 +271,7 @@ socks.createServer( (info: any, accept: any, deny: any) => {
             info.srcPort,
             info.dstAddr,
             info.dstPort,
-             (err: Error, stream: ssh2.ClientChannel) => {
+             (err: Error | undefined, stream?: ssh2.ClientChannel) => {
                 if (err) {
                     conn.end();
                     return deny();
@@ -306,7 +306,7 @@ var conn = new Client();
 
 conn.on('ready', () => {
     console.log('Client :: ready');
-    conn.subsys('netconf', (err: Error, stream: ssh2.ClientChannel) => {
+    conn.subsys('netconf', (err: Error | undefined, stream?: ssh2.ClientChannel) => {
         if (err) throw err;
         stream.on('data', (data: any) => {
             console.log(data);
@@ -496,7 +496,7 @@ new ssh2.Client().connect({
 
 new ssh2.Client().connect({
     agent: new (class extends ssh2.BaseAgent<string> {
-        getIdentities(callback: (err: Error | undefined, publicKeys: string[]) => void): void {
+        getIdentities(callback: (err: Error | undefined, publicKeys?: string[]) => void): void {
             callback(undefined, ['some key'])
         }
         sign(publicKey: string, data: Buffer, options: ssh2.SigningRequestOptions | ssh2.SignCallback, callback?: ssh2.SignCallback): void {

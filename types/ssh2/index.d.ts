@@ -1987,13 +1987,17 @@ export interface WriteStream extends Writable {
     on(event: string | symbol, listener: Function): this;
 }
 
-export type ClientCallback = (err: Error | undefined, channel: ClientChannel) => void;
+export type ClientCallback = (err: undefined, channel: ClientChannel) => void;
+export type ClientCallback = (err: Error) => void;
 
-export type ServerCallback = (err: Error | undefined, channel: ServerChannel) => void;
+export type ServerCallback = (err: undefined, channel: ServerChannel) => void;
+export type ServerCallback = (err: Error) => void;
 
-export type ClientForwardCallback = (err: Error | undefined, port: number) => void;
+export type ClientForwardCallback = (err: undefined, port: number) => void;
+export type ClientForwardCallback = (err: Error) => void;
 
-export type ClientSFTPCallback = (err: Error | undefined, sftp: SFTPWrapper) => void;
+export type ClientSFTPCallback = (err: undefined, sftp: SFTPWrapper) => void;
+export type ClientSFTPCallback = (err: Error) => void;
 
 export type ChangePasswordCallback = (newPassword: string) => void;
 
